@@ -1,0 +1,145 @@
+CASUALTIES OF WORK AND OF WAR
+
+
+Alexander Macdougall
+
+
+_______________________________________
+
+ABSTRACT (ONE SPACE ABOVE, TWO BELOW)
+
+_______________________________________
+
+“Fell over, outside.” Through his thick Ukrainian accent, I could barely discern what he meant. Maybe a rack of cabinet parts had fallen over? He pulled me by my right arm through the bay doors. What I witnessed next seemed more fitting of a warzone. Luckily for most, life-altering workplace accidents are a rarity. However, during the early twentieth century industrial labor was far more ubiquitous, arduous, and dangerous. American laborers of the late nineteenth and early twentieth centuries would fight to alleviate themselves from conditions tantamount to those faced by their countrymen in the trenches of Belgium and France. Realizing this equivalency will require a comparison of fatality statistics, an analysis of contemporary American attitudes towards labor and warfare, an exploration of early twentieth-century labor disputes, and an overview of state, federal, and union actions undertaken in the pursuit of an armistice in the workplace. The intention of this paper is to explain the scope and sentiment around early 20th century industrial safety using contemporary and modern sources. Gauging to what degree it was a literal war is up interpretation, but fatalities statistics offer some insight. 
+
+Although direct U.S. military involvement in the Great War spanned slightly less than a year, the total number of combat fatalities was almost certainly deduced with militant precision relative to those calculated by early accident statisticians. With varying assessments, most contemporary statistics between 1906-1915 estimated total yearly fatalities related to workplace injuries in the United States at around thirty thousand.(1) A less conservative tally by the Massachusetts Industrial Accident Board “placed the number of workers… killed by [yearly accidents]”(2) at seventy-five thousand. Based on these statistics, it seems reasonable to infer that between 1906 and 1915, deaths related to industrial labor varied from 25,000 to 80,000 per 
+_______________________________________
+1. Gustavus Myers, “A Study of the Causes of Industrial Accidents,” Publications of the American Statistical Association Vol. 14, No. 111, (1915): 673.
+2. Myers, “A Study of the Causes of Industrial Accidents,” 674.
+
+annum, with an average of 52,500. This is markedly analogous to American combat deaths between 1917-1918, which amounted to 53,402 K.I.A.(3) When comparing these numbers by percentage of involved actors, the total brutality of trench warfare does overtake industrial labor, to a degree. With 4.7 million servicemembers taking part in the First World War,(4) total U.S. combat casualties amount to roughly 1.3% of participants. Numbering around 38 million,(5) Americans employed in industrial activity during the period of 1906-1915 perished at a casualty rate of approximately 0.14%.(6) Americans during the early twentieth century were nearly ten times more likely to perish in combat than they were working in an industrial environment. When considering the similar average pay offered by both careers juxtaposed to the nature of both occupations, this is not a great magnitude of difference. While some twentieth century contemporaries shared a comparable dismay over this less than grand chasm between safety on the shop floor and in the trenches, others clung to a belief that the stark number of fatalities was an inherent part of industrial labor. 
+
+"The mining of coal, the running of trains, the making of explosives, the sailing of ships… The occupation accident mortality in such trades is the price of life itself, for these occupations of employments minister to the absolute needs of the people." 
+– Frederick L. Hoffman
+_______________________________________
+3. Department of Veterans Affairs, “America’s Wars,” (2021), 1.
+4. Ibid.
+5. U.S. Bureau of Labor Statistics, “The life of American workers in 1915,” 2016.
+6. Based on 52,500 fatality average purported by this essay. Some contentious sources claim fatalities as high as 100,000/year, though a range of 25,000-80,000 seemed appropriate based Myers’ and Hoffman’s analyses.
+
+Associating loss of life and limb during a day’s work to the experiences of soldiers on the battlefield is not a modern purview. In his 1907 magazine article, “Our Industrial Juggernaut,” author Arthur B. Reeve equated the titanic number of dead and maimed American industrial workers to soldiers of the Russo-Japanese War. From his contemporary perspective, “human life [was] cheap – at least cheaper than the cost of protecting the army of toilers from the whirring machinery of the industrial Juggernaut.”(7) While fundamentally decrying the “carelessness of greedy employers,”(8) Reeves also accentuates generalized perceptions surrounding a “disregard for human life.”(9) This notion is enforced by labor advocate and leading suffragette Crystal Eastman, in her 1910 report, “Work-Accidents and the Law.” Then Secretary of the New York State Employers’ Liability Commission, Eastman hints at a sense of normalcy surrounding workplace accidents, claiming “we all know men who would give more happiness by dying than they gave by living.”(10) Her words certainly add an ere of broadly generalized misery to the period, supposing male ‘suicide’ at work to be preferable to a lifetime of destitution and hard labor. While public figures and contemporary writers exposed the miserable and warlike conditions of early industrial wage-labor from the relative comfort of their typewriters, laborers and soldiers alike would produce strikingly analogous works of poetry.
+
+It can be difficult to distinguish between the poetic works of soldiers and workers during the early twentieth century. This is especially true of miners, whose workplace conditions were arguably the most heinous of early American industry. 
+_______________________________________
+
+7. Arthur B. Reeve, “Our Industrial Juggernaut,” Everybody’s Magazine Vol. 16, No. 2, (1907), 147.
+8. Reeve, “Our Industrial Juggernaut”, 147.
+9. Ibid, 157.
+10. Crystal Eastman, “Work-Accidents and the Law,” 12.
+
+"Brave men were fighting, standing side by side
+Fighting for justice, fighting with pride.
+I was with them, with them heart and soul,
+But when the test came I left them in the cold."
+– Anonymous
+
+The language of the above poem, titled “After the Strike” and by an anonymous writer,(11) evokes images of conflict, brotherhood, and righteousness; ultimately ending in a tone of regretful betrayal. The title of this poem makes clear the context for which it was written, though its language and tone seem equally befitting of a shell-shocked soldier failing to follow his comrades into the hellfire of no man’s land. “Strike” may even be inferred in a military sense, as in an artillery strike or movement of troops towards an objective. In turn, a soldier’s poetry can also be seen to inhabit a similar sphere of misery. 
+
+"It may be he shall take my hand
+And lead me into his dark land
+And close my eyes and quench my breath –
+It may be I shall pass him still.
+I have a rendezvous with Death
+On some scarred slope of battered hill,
+When Spring comes round again this year
+And the first meadow-flowers appear." 
+– Alan Seeger
+_______________________________________
+11. Dan Tannacito, “Poetry of the Colorado Miners: 1903-1906,” The Radical Teacher No. 15, (1980), 8, end notes on author’s anonymity.
+
+Billowing with cold inevitability, “Rendezvous with Death” by Alan Seeger purports a higher degree of hopelessness than “After the Strike.” Even so, a degree of interchangeability exists between the two poems. A “scarred slope of battered hill”(12) may hint at industrial forestry or mining, while workers such as those who Eastman described may well have embraced a “rendezvous with Death.”(13) While both pieces might be artistically analogous, the plainly visible violence of trench warfare is more broadly apparent when comparing these two poems. Seeger perceives to have no choice in the manner of his death, while the anonymous poet-miner at least availed a ‘dishonorable’ escape. Subjective differences aside, the content of both works echo danger, despair, and militancy; words that might also define the nature of the Colorado Labor Wars.
+
+By the 1890’s, notions of conflict involving laborers, business, and the state in Colorado were already well entrenched. Populist Governor Davis H. Waite would exclaim in support of workers, “the war has begun… that eternal warfare of monarchy and monopoly against the right of the people to self-government”.(14) Waite’s claim alluded to the working class’s disaffection towards their employers, then bearing the brunt of the Panic of 1893. During the precipitating 1880’s collapse of silver and prior to the Sherman Silver Purchase Act, Colorado senator Henry M. Teller forewarned Americans of “a system of industrial slavery which will be the worst known to the human race.”(15) Although the demonetization of silver was not the soul force behind America’s ever expanding and immiserating industrial labor caste, Teller’s warning largely came to fruition for a time. Aside from the yearly slaughter of thousands of workers around the turn of 
+_______________________________________
+12. Alan Seeger, “I Have a Rendezvous with Death,” A Treasury of War Poetry: British and American Poems of the World War 1914-1917, edited by George Hebert Clarke, XV. Poets Militant.
+13. Ibid.
+14. Leon W. Fuller, “Colorado’s Revolt against Capitalism,” The Mississippi Valley Historical Review Vol. 21, No. 3, (1934), 343.
+15. Fuller, “Colorado’s Revolt against Capitalism,” 344.
+
+the century, Colorado’s violent period of 1903-1904 stands as testament to the senator’s statement. 
+
+Then Governor James Hamilton Peabody stood in martial opposition to strikers led by the Western Federation of Miners (WFM). Declaring “a state of insurrection, and suspended… writ of habeas corpus,”(16) Peabody would call in nearly one thousand soldiers to patrol the region of Teller County, Colorado.(17) The potency of these troops to enforce public order had greatly increased during the period of Reconstruction and beyond (arguably to the present day). Guard units organized out of numerous armories, well armed with the then modern Krag-Jorgenson rifle; alongside more antiquated smooth bore cannons that were “remarkably effective…in riot duty.”(18) Despite high tensions, outright warfare between miners and National Guard units would be restricted to policing actions and dynamite blasting incidents (attributed to members of the WFM).(19) The resulting chaos saw a series of bombings and riots, in which thirteen miners were killed, several hundred deported and “42 turned over to the authorities.”(20) The WFM was defamed to oblivion. The forty-two imprisoned miner’s only option was to renounce their union memberships for freedom. Peabody’s militant reaction to disgruntled Colorado miners seems synonymous to former governor Waite’s supposition of an emboldening class war, all the while concurrent to the fruition of senator Teller’s dystopic industrial wasteland. 
+
+As public awareness surrounding workplace accidents increased with improving statistical surveys by state labor departments, the 1910’s would harken the slow reversal of 
+_______________________________________
+16. Philip Taft, “Violence in American Labor Disputes,” The Annals of the American Academy of Political and Social Science Vol. 364, (1966), 131.
+17. George G. Suggs Jr., “Militant Western Labor Confronts the Hostile State: A Case Study,” Western Historical Quarterly Vol. 2, No. 4, (1971), 392.
+18. Robert Reinders, “Militia and Public Order in Nineteenth-Century America,” Journal of American Studies Vol. 11, No. 1, (1977), 95.
+19. George G. Suggs Jr., “Militant Western Labor Confronts the Hostile State: A Cast Study,” 397.
+20. Suggs Jr., 398.
+
+America’s easily skirted labor laws.(21) First introduced in Wisconsin in 1911,(22) workers compensation would “significantly raise the average levels of postaccident compensation.”(23) This was in stark contrast to prior common-law labor principles which placed the burden of proof regarding due care on employees rather than employers.(24) Unfortunately, shifting legal onuses and financial relief for injured workers likely stemmed more from a fiscal reality than a humanitarian one. During the late nineteenth century, the fellow-servant rule was employed by state courts to refute employers’ liability for accidents caused by one employee to another. Contemporary commentators claimed reversing this would “encourage lax habits… cost employers a fortune in compensation claims, and blunt entrepreneurial spirit.”(25) As the early twentieth century proceeded and the social mentality regarding progressive policies such as workplace safety emboldened, economic inspiration for safety also mounted. In 1929, The Travelers Insurance Company would publish a report stating, “hidden costs… [including] destruction of property and loss of production, equalled four times the direct costs in the form of compensation.”(26) The dollar inspired further exploration of workplace safety alongside calls for reform by labor activists, public figures, and progressive authors. 
+
+Preceding equivalencies by contemporary writers between war and work may have inspired conversations but they failed to achieve radical workplace safety reformations during the early twentieth century. Fundamental improvement would finally occur over the middle and 
+_____________________________________
+21. Price V. Fishback, “The Adoption of Worker’s Compensation in the United States, 1900-1930,” The Journal of Law & Economics Vol. 41, No. 2, (1998), 316.
+22. Gregory P. Guyton, “A Brief History of Workers’ Compensation,” The National Center for Biotechnology Information. 
+23. Price V. Fishback, “The Adoption of Worker’s Compensation in the United States, 1900-1930,” 309.
+24. Price V. Fishback, “The Adoption of Worker’s Compensation in the United States, 1900-1930,” The Journal of Law & Economics Vol. 41, No. 2, (1998), 308.
+25. Donald W. Rogers, “From Common Law to Factory Laws: The Transformation of Workplace Safety Law in Wisconsin before Progressivism,” The American Journal of Legal History Vol. 39, No. 2, (1995), 187.
+26. Chester A. Kline, “Trends in Industrial Safety Practices in the United States,” 55.
+
+late twentieth century, with a 90% decline in work-related injuries over the period of 1933 to 1997.  Safety mechanisms, the introduction and expansion of regulatory bodies such as the Occupational Safety and Health Administration, and “extensive changes in U.S. economic activity, the U.S. industrial mix, and workforce demographics”  have all played a part in nerfing America’s tragically violent industrial history. Considering the eventual uprooting of American industrial labor to offshore states, the extent to which empathy or humanity played a role in this reduction seems associative rather than decisive.
+  
+While opinions of those like Frederick L. Hoffman regarding the critical nature of industrial activity, relative to the suffering of the maimed, poisoned, and disabled, may seem barbarically ignorant, this notion persists today. The ubiquitous driving of cars, the mass consumption of processed foods, and the overly sedentary nature of modern life may all be perceived to “minister to the absolute needs of the people.”  The war to alleviate late eighteenth and early nineteenth century laborers of their atrocious workplace conditions was championed by individuals who recognized it both literally and figuratively as a state of armed conflict. With similar fatality rates to contemporary conflicts, equivalent poetic attitudes between soldiers and laborers, labor disputes that entailed the use of soldiers as law enforcers, and economic incentives as major drivers for resolution, an uneasy peace would ensue over the battlefields of industry. Although improvements have certainly been made, it should be noted that just as America pursued a series of proxy wars during the mid to late 20th century, so too has it pursued the formation of proxy industries. By exporting most of its manufacturing sector to nations whose own labor laws and conditions are arguably worse than those of early twentieth century America, the issue has simply been relocated rather than solved. 
+_____________________________________
+27. CDC, “Achievements in Public Health, 1900-1999: Improvements in Workplace Safety”
+28. Ibid.
+29. Frederick L. Hoffman, “Industrial Accidents and Industrial Diseases,” Publications of the American Statistical Association Vol. 11, No. 88, (1909), 570.
+
+_____________________________________
+BIBLIOGRAPHY
+
+CENTER FOR DISEASE CONTROL AND PREVENTION. “Achievements in Public Health, 1900–1999: Improvements in Workplace Safety.” (1999).
+
+DEPARTMENT OF VETERANS AFFAIRS. “America’s Wars.” (2021).
+
+EASTMAN, CRYSTAL. Work-Accidents and the Law. New York: Charities Publication Committee, 1910.
+
+FISHBACK, PRICE V., AND SHAWN EVERETT KANTOR. “The Adoption of Worker’s Compensation in the United States, 1900–1930.” The Journal of Law & Economics 41, no. 2 (1998): 305–342.
+
+FULLER, LEON W. “Colorado’s Revolt against Capitalism.” The Mississippi Valley Historical Review 21, no. 3 (1934): 343–360.
+
+HOFFMAN, L. FREDERICK. “Industrial Accidents and Industrial Diseases.” Publications of the American Statistical Association 11, no. 88 (1909): 567–603.
+
+KLINE, CHESTER A. “Trends in Industrial Safety Practices in the United States.” The Review of Insurance Studies 1, no. 2 (1954): 54–58.
+
+LEON, CAROL BOYD. “The Life of American Workers in 1915.” Monthly Labor Review (2016).
+
+MYERS, GUSTAVUS. “A Study of the Causes of Industrial Accidents.” Publications of the American Statistical Association 14, no. 111 (1915): 672–694.
+
+REEVE, ARTHUR B. “Our Industrial Juggernaut.” Everybody’s Magazine 16, no. 2 (1907): 147–157.
+
+REINDERS, ROBERT. “Militia and Public Order in Nineteenth-Century America.” Journal of American Studies 11, no. 1 (1977): 81–101.
+
+SEEGER, ALAN. “I Have a Rendezvous with Death.” In A Treasury of War Poetry: British and American Poems of the World War 1914–1917, edited by George Herbert Clarke.
+
+TAFT, PHILIP. “Violence in American Labor Disputes.” The Annals of the American Academy of Political and Social Science 364 (1966): 127–140.
+
+TANNACITO, DAN. “Poetry of the Colorado Miners: 1903–1906.” The Radical Teacher, no. 15 (1980): 1–8.
+
+_____________________________________
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
