@@ -45,7 +45,20 @@ Type one of the following to view the essay:
 Type 'help' to return
 `;
   }
+function typeText(text, speed = 10) {
+  output.textContent = "";
+  let i = 0;
 
+  function type() {
+    if (i < text.length) {
+      output.textContent += text.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+
+  type();
+}
   // Load essay
   function loadEssay(subject, essayName) {
     output.textContent = "Loading...\n";
