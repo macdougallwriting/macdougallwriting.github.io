@@ -38,42 +38,57 @@ document.addEventListener("DOMContentLoaded", () => {
   let commandHistory = [];
   let historyIndex = -1;
 
-  input.addEventListener("keydown", e => {
+input.addEventListener("keydown", e => {
 
-    if (e.key === "Enter") {
-      e.preventDefault();
+  // ENTER (run command)
+  if (e.key === "Enter") {
+    e.preventDefault();
 
-      const cmd = input.value.trim();
-      if (cmd) {
-        commandHistory.push(cmd);
-        historyIndex = commandHistory.length;
-      }
+    const cmd = input.value.trim();
+    if (cmd) {
+      commandHistory.push(cmd);
+      historyIndex = commandHistory.length;
+    }
 
-      runCommand(cmd);
+    runCommand(cmd);
+    input.value = "";
+  }
+
+  // ESC = go back to main menu
+  if (e.key === "Escape") {
+    e.preventDefault();
+
+    // Cancel typing immediately
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+      isTyping = false;
+    }
+
+    input.value = "";
+    showMenu();
+  }
+
+  // UP ARROW
+  if (e.key === "ArrowUp") {
+    e.preventDefault();
+    if (historyIndex > 0) {
+      historyIndex--;
+      input.value = commandHistory[historyIndex];
+    }
+  }
+
+  // DOWN ARROW
+  if (e.key === "ArrowDown") {
+    e.preventDefault();
+    if (historyIndex < commandHistory.length - 1) {
+      historyIndex++;
+      input.value = commandHistory[historyIndex];
+    } else {
       input.value = "";
     }
+  }
 
-    // UP ARROW
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      if (historyIndex > 0) {
-        historyIndex--;
-        input.value = commandHistory[historyIndex];
-      }
-    }
-
-    // DOWN ARROW
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      if (historyIndex < commandHistory.length - 1) {
-        historyIndex++;
-        input.value = commandHistory[historyIndex];
-      } else {
-        input.value = "";
-      }
-    }
-
-  });
+});
 
   // =========================
   // BOOT SEQUENCE
