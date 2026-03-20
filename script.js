@@ -6,18 +6,14 @@ document.addEventListener("DOMContentLoaded", () => {
   let essays = {};
   let currentSubject = null;
 
-  // Typing control
+  // =========================
+  // TYPING SYSTEM
+  // =========================
   let typingTimeout = null;
   let isTyping = false;
 
-  // =========================
-  // TYPEWRITER FUNCTION
-  // =========================
-  function typeText(text, speed = 10) {
-    // Cancel any ongoing typing
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-    }
+  function typeText(text, speed = 8) {
+    if (typingTimeout) clearTimeout(typingTimeout);
 
     isTyping = true;
     output.textContent = "";
@@ -37,21 +33,86 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
+  // COMMAND HISTORY
+  // =========================
+  let commandHistory = [];
+  let historyIndex = -1;
+
+  input.addEventListener("keydown", e => {
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+
+      const cmd = input.value.trim();
+      if (cmd) {
+        commandHistory.push(cmd);
+        historyIndex = commandHistory.length;
+      }
+
+      runCommand(cmd);
+      input.value = "";
+    }
+
+    // UP ARROW
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (historyIndex > 0) {
+        historyIndex--;
+        input.value = commandHistory[historyIndex];
+      }
+    }
+
+    // DOWN ARROW
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (historyIndex < commandHistory.length - 1) {
+        historyIndex++;
+        input.value = commandHistory[historyIndex];
+      } else {
+        input.value = "";
+      }
+    }
+
+  });
+
+  // =========================
+  // BOOT SEQUENCE
+  // =========================
+  function bootSequence() {
+    const bootText = `
+Initializing system...
+Loading kernel modules...
+Establishing secure connection...
+Decrypting archives...
+Mounting drives...
+Access granted.
+
+Welcome, user.
+
+`;
+
+    typeText(bootText, 20);
+
+    setTimeout(() => {
+      showMenu();
+    }, 3000);
+  }
+
+  // =========================
   // LOAD JSON INDEX
   // =========================
   fetch("essays/index.json")
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
       essays = data;
-      showMenu();
+      bootSequence();
     })
-    .catch(err => {
+    .catch(() => {
       output.textContent = "Failed to load essays index.";
-      console.error(err);
     });
 
   // =========================
-  // MAIN MENU
+  // MENUS
   // =========================
   function showMenu() {
     currentSubject = null;
@@ -67,9 +128,6 @@ help
 `);
   }
 
-  // =========================
-  // SUBJECT MENU
-  // =========================
   function showSubjectMenu(subject) {
     currentSubject = subject;
     const list = essays[subject].join("\n- ");
@@ -77,7 +135,7 @@ help
     typeText(`
 ${subject.toUpperCase()} ESSAYS
 
-Type one of the following to view the essay:
+Type one of the following:
 
 - ${list}
 
@@ -86,30 +144,23 @@ Type 'help' to return
   }
 
   // =========================
-  // LOAD ESSAY (NO TYPING)
+  // LOAD ESSAY
   // =========================
   function loadEssay(subject, essayName) {
-    // Cancel typing immediately
-    if (typingTimeout) {
-      clearTimeout(typingTimeout);
-      isTyping = false;
-    }
+    if (typingTimeout) clearTimeout(typingTimeout);
 
     output.textContent = "Loading...\n";
 
-    const filePath = `essays/${subject}/${essayName}.txt`;
-
-    fetch(filePath)
-      .then(response => {
-        if (!response.ok) throw new Error("File not found");
-        return response.text();
+    fetch(`essays/${subject}/${essayName}.txt`)
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.text();
       })
       .then(text => {
         output.textContent = text + "\n\nType help to return";
       })
-      .catch(err => {
-        output.textContent = `Essay not found: ${subject} ${essayName}\n\nType help`;
-        console.error(err);
+      .catch(() => {
+        typeText(`Error: file not found\n\nType help`);
       });
   }
 
@@ -132,12 +183,12 @@ Type 'help' to return
       return;
     }
 
-    // If inside subject menu
+    // Inside subject
     if (currentSubject) {
       if (essays[currentSubject].includes(cmd)) {
         loadEssay(currentSubject, cmd);
       } else {
-        typeText(`Invalid essay for ${currentSubject}: ${cmd}\n\nType help to return`);
+        typeText(`Invalid entry\n\nType help`);
       }
       return;
     }
@@ -146,20 +197,9 @@ Type 'help' to return
     if (essays.hasOwnProperty(cmd)) {
       showSubjectMenu(cmd);
     } else {
-      typeText(`Invalid command: ${cmd}\n\nType help to return`);
+      typeText(`Unknown command\n\nType help`);
     }
   }
-
-  // =========================
-  // INPUT LISTENER
-  // =========================
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      runCommand(input.value);
-      input.value = "";
-    }
-  });
 
   input.focus();
 
