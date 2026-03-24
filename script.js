@@ -115,11 +115,11 @@ Welcome, user.
 
 `;
 
-    typeText(bootText, 10);
+    typeText(bootText, 5);
 
     setTimeout(() => {
       showMenu();
-    }, 1500);
+    }, 500);
   }
 
   // =========================
