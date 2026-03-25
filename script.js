@@ -1,18 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-
   const output = document.getElementById("output");
   const input = document.getElementById("commandInput");
 
   let essays = {};
   let currentSubject = null;
-
-  // =========================
-  // TYPING SYSTEM
-  // =========================
   let typingTimeout = null;
   let isTyping = false;
   let fullText = "";
 
+  // =========================
+  // TYPING SYSTEM
+  // =========================
   function typeText(text, speed = 10) {
     if (typingTimeout) clearTimeout(typingTimeout);
 
@@ -35,55 +33,143 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // COMMAND HISTORY
+  // COMMAND HANDLER
   // =========================
-  let commandHistory = [];
-  let historyIndex = -1;
+  function runCommand(cmd) {
+    if (!cmd) return;
+    cmd = cmd.toLowerCase().trim();
 
-  input.addEventListener("keydown", e => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const cmd = input.value.trim();
-      if (cmd) {
-        commandHistory.push(cmd);
-        historyIndex = commandHistory.length;
-      }
-      runCommand(cmd);
-      input.value = "";
-    }
-
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      if (historyIndex > 0) {
-        historyIndex--;
-        input.value = commandHistory[historyIndex];
-      }
-    }
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      if (historyIndex < commandHistory.length - 1) {
-        historyIndex++;
-        input.value = commandHistory[historyIndex];
-      } else {
-        input.value = "";
-      }
-    }
-  });
-
-  // =========================
-  // GLOBAL ESC KEY
-  // =========================
-  document.addEventListener("keydown", e => {
-    if (e.key === "Escape") {
-      e.preventDefault();
-      if (typingTimeout) clearTimeout(typingTimeout);
-      isTyping = false;
-      input.value = "";
+    if (cmd === "help") {
       showMenu();
-      input.focus();
+      return;
     }
-  });
+
+    // Inside subject
+    if (currentSubject) {
+      if (essays[currentSubject].includes(cmd)) {
+        loadEssay(currentSubject, cmd);
+      } else if (cmd === "back") {
+        showMenu();
+      } else {
+        appendEssayText("Invalid command. Type 'back' to return.\n");
+      }
+      return;
+    }
+
+    // Main menu
+    if (essays.hasOwnProperty(cmd)) {
+      showSubjectMenu(cmd);
+    } else {
+      typeText(`Unknown command\n\nType help`);
+    }
+  }
+
+  // =========================
+  // LOAD ESSAY
+  // =========================
+  function loadEssay(subject, essayName) {
+    if (typingTimeout) clearTimeout(typingTimeout);
+    isTyping = false;
+    output.textContent = "";
+
+    fetch(`essays/${subject}/${essayName}.txt`)
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.text();
+      })
+      .then(text => {
+        currentSubject = subject;
+        displayEssay(text);
+      })
+      .catch(() => {
+        typeText(`Error: file not found\n\nType 'back'`);
+      });
+  }
+
+  // Display essay with top & bottom inputs
+  function displayEssay(text) {
+    output.innerHTML = "";
+
+    // Top input
+    const topInputLine = createEssayInput();
+    output.appendChild(topInputLine);
+
+    // Essay text
+    const essayText = document.createElement("pre");
+    essayText.textContent = text;
+    output.appendChild(essayText);
+
+    // Bottom input
+    const bottomInputLine = createEssayInput();
+    output.appendChild(bottomInputLine);
+
+    // Focus on top input
+    const firstInput = topInputLine.querySelector("input");
+    firstInput.focus();
+  }
+
+  function createEssayInput() {
+    const div = document.createElement("div");
+    div.classList.add("inputLineEssay");
+
+    const span = document.createElement("span");
+    span.classList.add("prompt");
+    span.textContent = "> ";
+    div.appendChild(span);
+
+    const inp = document.createElement("input");
+    inp.type = "text";
+    inp.classList.add("commandInput");
+    inp.placeholder = "Type command + ENTER";
+    inp.autocomplete = "off";
+
+    inp.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        runCommand(inp.value);
+        inp.value = "";
+      }
+    });
+
+    div.appendChild(inp);
+    return div;
+  }
+
+  function appendEssayText(str) {
+    const pre = output.querySelector("pre");
+    if (pre) pre.textContent += str;
+  }
+
+  // =========================
+  // MENUS
+  // =========================
+  function showMenu() {
+    currentSubject = null;
+    typeText(`
+PORTFOLIO TERMINAL
+
+Commands:
+
+${Object.keys(essays).join("\n")}
+
+help
+`);
+    input.focus();
+  }
+
+  function showSubjectMenu(subject) {
+    currentSubject = subject;
+    const list = essays[subject].join("\n- ");
+    typeText(`
+${subject.toUpperCase()} ESSAYS
+
+Type one of the following:
+
+- ${list}
+
+Type 'help' to return
+`);
+  }
 
   // =========================
   // BOOT SEQUENCE
@@ -98,7 +184,6 @@ Mounting drives...
 Access granted.
 
 Welcome, user.
-
 `;
     typeText(bootText, 20);
     setTimeout(() => showMenu(), 3000);
@@ -118,129 +203,15 @@ Welcome, user.
     });
 
   // =========================
-  // MENUS
+  // GLOBAL ESC KEY (return to menu)
   // =========================
-  function showMenu() {
-    currentSubject = null;
-    typeText(`
-PORTFOLIO TERMINAL
-
-Commands:
-
-${Object.keys(essays).join("\n")}
-
-help
-`);
-  }
-
-  function showSubjectMenu(subject) {
-    currentSubject = subject;
-    const list = essays[subject].join("\n- ");
-    typeText(`
-${subject.toUpperCase()} ESSAYS
-
-Type one of the following:
-
-- ${list}
-
-Type 'help' to return
-`);
-  }
-
-  // =========================
-  // LOAD ESSAY (WITH TOP & BOTTOM INPUTS)
-  // =========================
-  function loadEssay(subject, essayName) {
-    fetch(`essays/${subject}/${essayName}.txt`)
-      .then(res => {
-        if (!res.ok) throw new Error();
-        return res.text();
-      })
-      .then(text => {
-
-        // Clear output and create top input
-        output.innerHTML = '';
-        createEssayInput('top');
-
-        // Type essay text
-        typeText(text + "\n", 0.125);
-
-        // Create bottom input after text
-        createEssayInput('bottom');
-
-      })
-      .catch(() => {
-        typeText(`Error: file not found\n\nType help`);
-      });
-  }
-
-  // =========================
-  // CREATE TOP/BOTTOM INPUT FOR ESSAYS
-  // =========================
-  function createEssayInput(position) {
-    const div = document.createElement("div");
-    div.classList.add("inputLineEssay");
-
-    const span = document.createElement("span");
-    span.classList.add("prompt");
-    span.textContent = ">";
-    div.appendChild(span);
-
-    const essayInput = document.createElement("input");
-    essayInput.type = "text";
-    essayInput.classList.add("commandInput");
-    essayInput.placeholder = "Type back to return";
-    div.appendChild(essayInput);
-
-    if (position === 'top') {
-      output.appendChild(div);
-      output.appendChild(document.createElement("br")); // spacing
-      essayInput.focus();
-    } else {
-      output.appendChild(document.createElement("br"));
-      output.appendChild(div);
-    }
-
-    essayInput.addEventListener("keydown", e => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        const cmd = essayInput.value.trim().toLowerCase();
-        if (cmd === "back" || cmd === "help") {
-          showMenu();
-          input.focus();
-        }
-        essayInput.value = "";
-      }
-    });
-  }
-
-  // =========================
-  // COMMAND HANDLER
-  // =========================
-  function runCommand(cmd) {
-    if (!cmd) return;
-    cmd = cmd.toLowerCase().trim();
-
-    if (cmd === "help") {
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      e.preventDefault();
       showMenu();
-      return;
+      input.focus();
     }
-
-    if (currentSubject) {
-      if (essays[currentSubject].includes(cmd)) {
-        loadEssay(currentSubject, cmd);
-      } else {
-        typeText(`Invalid entry\n\nType help`);
-      }
-      return;
-    }
-
-    if (essays.hasOwnProperty(cmd)) {
-      showSubjectMenu(cmd);
-    } else {
-      typeText(`Unknown command\n\nType help`);
-    }
-  }
+  });
 
   input.focus();
 });
