@@ -274,3 +274,18 @@ Type 'help' to return
   input.focus();
 
 });
+
+// Mobile tap = back / ESC
+document.addEventListener("click", (e) => {
+
+  // Ignore clicks on the input field
+  if (e.target === input) return;
+
+  if (isTyping) {
+    skipTyping();
+  } else {
+    showMenu();
+    input.focus();
+  }
+
+});
