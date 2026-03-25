@@ -97,10 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
     essayText.textContent = text;
     output.appendChild(essayText);
 
-    // Bottom input
-    const bottomInputLine = createEssayInput();
-    output.appendChild(bottomInputLine);
-
     topInputLine.querySelector("input").focus();
   }
 
