@@ -43,12 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
       isTyping = false;
     }
   }
-// Push initial states (important for Android)
-history.pushState({ page: 1 }, "", "");
-history.pushState({ page: 2 }, "", "");
+// Force a hash so back button has something real to change
+if (!location.hash) {
+  location.hash = "#home";
+}
 
 // Handle back button
-window.addEventListener("popstate", () => {
+window.addEventListener("hashchange", () => {
 
   if (isTyping) {
     skipTyping();
@@ -57,8 +58,10 @@ window.addEventListener("popstate", () => {
     input.focus();
   }
 
-  // Re-push state so back button keeps working
-  history.pushState({ page: 2 }, "", "");
+  // Reset hash so it can trigger again next time
+  setTimeout(() => {
+    location.hash = "#home";
+  }, 0);
 });
   
   // =========================
