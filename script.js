@@ -1,13 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const output = document.getElementById("output");
-  const input = document.getElementById("commandInput");
+
+  // Two input elements: top and bottom (bottom always exists)
+  const bottomInput = document.getElementById("commandInput");
+  let topInput = null; // will be created dynamically for essays
 
   let essays = {};
   let currentSubject = null;
 
   // =========================
-  // TYPING SYSTEM
+  // TYPING SYSTEM (UPGRADED)
   // =========================
   let typingTimeout = null;
   let isTyping = false;
@@ -49,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let historyIndex = -1;
 
   function handleInput(e) {
-    // ENTER key
+    // Only handle Enter and Arrow keys
     if (e.key === "Enter") {
       e.preventDefault();
       const cmd = e.target.value.trim();
@@ -61,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
       e.target.value = "";
     }
 
-    // UP / DOWN arrows
     if (e.key === "ArrowUp") {
       e.preventDefault();
       if (historyIndex > 0) {
@@ -69,6 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.target.value = commandHistory[historyIndex];
       }
     }
+
     if (e.key === "ArrowDown") {
       e.preventDefault();
       if (historyIndex < commandHistory.length - 1) {
@@ -80,18 +83,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  input.addEventListener("keydown", handleInput);
+  bottomInput.addEventListener("keydown", handleInput);
 
   // =========================
-  // ESC KEY
+  // GLOBAL ESC KEY
   // =========================
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       e.preventDefault();
-      skipTyping();
-      input.value = "";
+      // Return to main menu
+      if (typingTimeout) clearTimeout(typingTimeout);
+      isTyping = false;
+      removeTopInput();
+      bottomInput.value = "";
       showMenu();
-      input.focus();
+      bottomInput.focus();
     }
   });
 
@@ -111,7 +117,9 @@ Welcome, user.
 
 `;
     typeText(bootText, 20);
-    setTimeout(showMenu, 3000);
+    setTimeout(() => {
+      showMenu();
+    }, 3000);
   }
 
   // =========================
@@ -132,6 +140,7 @@ Welcome, user.
   // =========================
   function showMenu() {
     currentSubject = null;
+    removeTopInput();
     typeText(`
 PORTFOLIO TERMINAL
 
@@ -141,10 +150,12 @@ ${Object.keys(essays).join("\n")}
 
 help
 `);
+    bottomInput.focus();
   }
 
   function showSubjectMenu(subject) {
     currentSubject = subject;
+    removeTopInput();
     const list = essays[subject].join("\n- ");
     typeText(`
 ${subject.toUpperCase()} ESSAYS
@@ -155,6 +166,38 @@ Type one of the following:
 
 Type 'help' to return
 `);
+    bottomInput.focus();
+  }
+
+  // =========================
+  // ESSAY INPUT MANAGEMENT
+  // =========================
+  function addTopInput() {
+    if (!topInput) {
+      topInput = document.createElement("input");
+      topInput.type = "text";
+      topInput.placeholder = "Type command + ENTER";
+      topInput.className = "command-input-top";
+      topInput.style.background = "black";
+      topInput.style.color = "#00ff00";
+      topInput.style.border = "none";
+      topInput.style.outline = "none";
+      topInput.style.fontFamily = "monospace";
+      topInput.style.fontSize = "18px";
+      topInput.style.width = "100%";
+      topInput.style.marginBottom = "10px";
+      output.parentNode.insertBefore(topInput, output);
+      topInput.addEventListener("keydown", handleInput);
+    }
+    topInput.focus();
+  }
+
+  function removeTopInput() {
+    if (topInput) {
+      topInput.removeEventListener("keydown", handleInput);
+      topInput.remove();
+      topInput = null;
+    }
   }
 
   // =========================
@@ -164,10 +207,8 @@ Type 'help' to return
     if (typingTimeout) clearTimeout(typingTimeout);
     isTyping = false;
 
-    output.textContent = "";
-
-    // top prompt
-    output.innerHTML += "Type 'back' to return\n\n";
+    output.textContent = "Loading...\n";
+    addTopInput();
 
     fetch(`essays/${subject}/${essayName}.txt`)
       .then(res => {
@@ -175,11 +216,10 @@ Type 'help' to return
         return res.text();
       })
       .then(text => {
-        // type essay
-        typeText(text + "\n\nType 'back' to return", 0.125);
+        typeText(`Type back to return.\n\n${text}\n\nType back to return`, 0.125);
       })
       .catch(() => {
-        typeText(`Error: file not found\n\nType 'back' to return`);
+        typeText(`Error: file not found\n\nType back to return`);
       });
   }
 
@@ -188,6 +228,7 @@ Type 'help' to return
   // =========================
   function runCommand(cmd) {
     if (!cmd) return;
+
     cmd = cmd.toLowerCase().trim();
 
     if (cmd === "help") {
@@ -195,42 +236,37 @@ Type 'help' to return
       return;
     }
 
-    if (cmd === "back") {
-      showMenu();
-      return;
-    }
-
-    // Inside subject
     if (currentSubject) {
       if (essays[currentSubject].includes(cmd)) {
         loadEssay(currentSubject, cmd);
+      } else if (cmd === "back") {
+        removeTopInput();
+        showSubjectMenu(currentSubject);
       } else {
-        typeText(`Invalid entry\n\nType 'help'`);
+        typeText(`Invalid entry\n\nType help`);
       }
       return;
     }
 
-    // Main menu
     if (essays.hasOwnProperty(cmd)) {
       showSubjectMenu(cmd);
     } else {
-      typeText(`Unknown command\n\nType 'help'`);
+      typeText(`Unknown command\n\nType help`);
     }
   }
 
-  input.focus();
-
   // =========================
-  // MOBILE BACK BUTTON
+  // MOBILE BACK BUTTON HANDLING
   // =========================
   if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    history.pushState(null, "", location.href);
     window.addEventListener("popstate", () => {
-      skipTyping();
-      showMenu();
-      input.focus();
-      history.pushState(null, "", location.href);
+      if (currentSubject && !isTyping) {
+        removeTopInput();
+        showMenu();
+        bottomInput.focus();
+      }
     });
   }
 
+  bottomInput.focus();
 });
