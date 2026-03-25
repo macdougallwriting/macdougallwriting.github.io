@@ -1,51 +1,33 @@
 /* =========================
-   BASE TERMINAL STYLES
-   ========================= */
+   GLOBAL BODY
+========================= */
 body {
   background: black;
   color: #00ff00;
   font-family: monospace;
   padding: 20px;
-  margin: 0;
 }
 
+/* =========================
+   TERMINAL CONTAINER
+========================= */
 #terminal {
   max-width: 800px;
   margin: 0 auto;
+  width: 100%;
 }
 
+/* =========================
+   OUTPUT AREA
+========================= */
 #output {
   white-space: pre-wrap;
-  word-wrap: break-word;
+  overflow-wrap: break-word;  /* important for Firefox */
+  word-break: break-word;
+  margin-bottom: 10px;        /* space between output and bottom input */
 }
 
-/* =========================
-   INPUT LINE STYLING
-   ========================= */
-.inputLine {
-  display: flex;
-  gap: 8px;
-  margin-top: 10px;
-}
-
-.prompt {
-  font-weight: bold;
-}
-
-.inputLine input {
-  background: black;
-  color: #00ff00;
-  border: none;
-  outline: none;
-  font-family: monospace;
-  font-size: 18px;
-  width: 100%;
-  caret-color: #00ff00;
-}
-
-/* =========================
-   BLINKING CURSOR
-   ========================= */
+/* blinking cursor for output only */
 #output::after {
   content: "_";
   animation: blink 1s infinite;
@@ -57,14 +39,39 @@ body {
 }
 
 /* =========================
-   TOP/BOTTOM INPUTS
-   ========================= */
-#essayTopInput, #essayBottomInput {
+   INPUT LINE (bottom input for menus)
+========================= */
+#inputLine {
   display: flex;
   gap: 8px;
-  margin: 10px 0;
+  margin-top: 10px;
 }
 
-#essayTopInput .prompt, #essayBottomInput .prompt {
+/* =========================
+   PROMPT SYMBOL
+========================= */
+.prompt {
   font-weight: bold;
+}
+
+/* =========================
+   ALL INPUTS (top & bottom)  
+   Ensures identical green-on-black aesthetic
+========================= */
+input.commandInput {
+  background: black;
+  color: #00ff00;
+  border: none;
+  outline: none;
+  font-family: monospace;
+  font-size: 18px;
+  width: 100%;
+  padding: 0;
+  margin: 5px 0;
+}
+
+/* Placeholder styling */
+input.commandInput::placeholder {
+  color: #00ff00;
+  opacity: 0.5;
 }
