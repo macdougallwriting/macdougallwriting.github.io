@@ -1,15 +1,28 @@
+/* =========================
+   BASE TERMINAL STYLES
+   ========================= */
 body {
   background: black;
   color: #00ff00;
   font-family: monospace;
   padding: 20px;
+  margin: 0;
+}
+
+#terminal {
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 #output {
   white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
-#inputLine {
+/* =========================
+   INPUT LINE STYLING
+   ========================= */
+.inputLine {
   display: flex;
   gap: 8px;
   margin-top: 10px;
@@ -19,7 +32,7 @@ body {
   font-weight: bold;
 }
 
-#commandInput {
+.inputLine input {
   background: black;
   color: #00ff00;
   border: none;
@@ -27,7 +40,12 @@ body {
   font-family: monospace;
   font-size: 18px;
   width: 100%;
+  caret-color: #00ff00;
 }
+
+/* =========================
+   BLINKING CURSOR
+   ========================= */
 #output::after {
   content: "_";
   animation: blink 1s infinite;
@@ -37,13 +55,16 @@ body {
   0%, 50%, 100% { opacity: 1; }
   25%, 75% { opacity: 0; }
 }
-#terminal {
-  max-width: 800px;
-  margin: 0 auto;
-  width: 100%;
+
+/* =========================
+   TOP/BOTTOM INPUTS
+   ========================= */
+#essayTopInput, #essayBottomInput {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
 }
-#output {
-  white-space: pre-wrap;
-  overflow-wrap: break-word; /* important for Firefox */
-  word-break: break-word;
+
+#essayTopInput .prompt, #essayBottomInput .prompt {
+  font-weight: bold;
 }
