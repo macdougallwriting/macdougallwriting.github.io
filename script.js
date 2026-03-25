@@ -13,17 +13,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let isTyping = false;
   let fullText = "";
 
-  function typeText(text, speed = 10, container = output) {
+  function typeText(text, speed = 10) {
     if (typingTimeout) clearTimeout(typingTimeout);
 
     isTyping = true;
     fullText = text;
-    container.textContent = "";
+    output.textContent = "";
     let i = 0;
 
     function type() {
       if (i < text.length) {
-        container.textContent += text.charAt(i);
+        output.textContent += text.charAt(i);
         i++;
         typingTimeout = setTimeout(type, speed);
       } else {
@@ -32,14 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     type();
-  }
-
-  function skipTyping() {
-    if (isTyping) {
-      clearTimeout(typingTimeout);
-      output.textContent = fullText;
-      isTyping = false;
-    }
   }
 
   // =========================
@@ -88,8 +80,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       e.preventDefault();
-      if (typingTimeout) clearTimeout(typingTimeout);
-      isTyping = false;
+      if (isTyping && typingTimeout) {
+        clearTimeout(typingTimeout);
+        isTyping = false;
+      }
       input.value = "";
       showMenu();
       input.focus();
@@ -112,7 +106,9 @@ Welcome, user.
 
 `;
     typeText(bootText, 20);
-    setTimeout(() => showMenu(), 3000);
+    setTimeout(() => {
+      showMenu();
+    }, 3000);
   }
 
   // =========================
@@ -159,51 +155,48 @@ Type 'help' to return
   }
 
   // =========================
-  // LOAD ESSAY (with top & bottom input)
+  // LOAD ESSAY
   // =========================
   function loadEssay(subject, essayName) {
-    output.innerHTML = "";
-
-    // Top input
-    const topLine = document.createElement("div");
-    topLine.className = "inputLine";
-    const topPrompt = document.createElement("span");
-    topPrompt.className = "prompt";
-    topPrompt.textContent = ">";
-    const topInput = document.createElement("input");
-    topInput.className = "commandInput";
-    topInput.placeholder = "Type command + ENTER";
-    topLine.appendChild(topPrompt);
-    topLine.appendChild(topInput);
-    output.appendChild(topLine);
-
-    // Essay text
-    const essayDiv = document.createElement("div");
-    essayDiv.className = "essayText";
-    essayDiv.textContent = "Loading...";
-    output.appendChild(essayDiv);
+    if (typingTimeout) clearTimeout(typingTimeout);
 
     fetch(`essays/${subject}/${essayName}.txt`)
-      .then(res => res.ok ? res.text() : Promise.reject())
+      .then(res => {
+        if (!res.ok) throw new Error();
+        return res.text();
+      })
       .then(text => {
-        essayDiv.textContent = text;
+        // Clear output and insert top input
+        output.innerHTML = `<span class="prompt">></span> Type back to return\n\n`;
+        typeText(text + "\n", 0.125);
+
+        // Add bottom input dynamically after essay finishes typing
+        const bottomInputDiv = document.createElement("div");
+        bottomInputDiv.classList.add("inputLineEssay");
+        bottomInputDiv.innerHTML = `
+          <span class="prompt">></span>
+          <input type="text" class="commandInput" placeholder="Type back to return" autocomplete="off">
+        `;
+        output.appendChild(bottomInputDiv);
+
+        const bottomInput = bottomInputDiv.querySelector("input");
+        bottomInput.focus();
+
+        bottomInput.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            const cmd = bottomInput.value.trim().toLowerCase();
+            if (cmd === "back" || cmd === "help") {
+              showMenu();
+              input.focus();
+            }
+            bottomInput.value = "";
+          }
+        });
       })
       .catch(() => {
-        essayDiv.textContent = "Error: file not found";
+        typeText(`Error: file not found\n\nType help`);
       });
-
-    // Bottom input
-    const bottomLine = document.createElement("div");
-    bottomLine.className = "inputLine";
-    const bottomPrompt = document.createElement("span");
-    bottomPrompt.className = "prompt";
-    bottomPrompt.textContent = ">";
-    const bottomInput = document.createElement("input");
-    bottomInput.className = "commandInput";
-    bottomInput.placeholder = "Type command + ENTER";
-    bottomLine.appendChild(bottomPrompt);
-    bottomLine.appendChild(bottomInput);
-    output.appendChild(bottomLine);
   }
 
   // =========================
@@ -218,7 +211,6 @@ Type 'help' to return
       return;
     }
 
-    // Inside subject
     if (currentSubject) {
       if (essays[currentSubject].includes(cmd)) {
         loadEssay(currentSubject, cmd);
@@ -228,7 +220,6 @@ Type 'help' to return
       return;
     }
 
-    // Main menu
     if (essays.hasOwnProperty(cmd)) {
       showSubjectMenu(cmd);
     } else {
@@ -237,4 +228,5 @@ Type 'help' to return
   }
 
   input.focus();
+
 });
