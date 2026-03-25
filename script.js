@@ -43,7 +43,27 @@ document.addEventListener("DOMContentLoaded", () => {
       isTyping = false;
     }
   }
+ // Push a fake state so back button doesn't exit immediately
+history.pushState(null, "", location.href);
 
+// Handle back button
+window.addEventListener("popstate", () => {
+
+  // If typing, finish it
+  if (isTyping) {
+    skipTyping();
+    history.pushState(null, "", location.href);
+    return;
+  }
+
+  // Otherwise go to main menu
+  showMenu();
+  input.focus();
+
+  // Re-add state so back button keeps working
+  history.pushState(null, "", location.href);
+});
+  
   // =========================
   // COMMAND HISTORY
   // =========================
