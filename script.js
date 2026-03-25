@@ -208,7 +208,7 @@ Type 'help' to return
       })
       .then(text => {
         // slower typing for essays
-        typeText(text + "\n\nType help to return", 1);
+        typeText(text + "\n\nType help to return", 0.5);
       })
       .catch(() => {
         typeText(`Error: file not found\n\nType help`);
