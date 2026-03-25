@@ -1,10 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   const output = document.getElementById("output");
-
-  // Two input elements: top and bottom (bottom always exists)
-  const bottomInput = document.getElementById("commandInput");
-  let topInput = null; // will be created dynamically for essays
+  const input = document.getElementById("commandInput");
 
   let essays = {};
   let currentSubject = null;
@@ -18,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function typeText(text, speed = 10) {
     if (typingTimeout) clearTimeout(typingTimeout);
-
     isTyping = true;
     fullText = text;
     output.textContent = "";
@@ -52,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let historyIndex = -1;
 
   function handleInput(e) {
-    // Only handle Enter and Arrow keys
+    // Only handle Enter and arrow keys — do NOT skip typing
     if (e.key === "Enter") {
       e.preventDefault();
       const cmd = e.target.value.trim();
@@ -83,7 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  bottomInput.addEventListener("keydown", handleInput);
+  // Attach handler to main input
+  input.addEventListener("keydown", handleInput);
 
   // =========================
   // GLOBAL ESC KEY
@@ -91,13 +88,20 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       e.preventDefault();
-      // Return to main menu
-      if (typingTimeout) clearTimeout(typingTimeout);
-      isTyping = false;
-      removeTopInput();
-      bottomInput.value = "";
+
+      if (isTyping) {
+        skipTyping();
+        return;
+      }
+
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        isTyping = false;
+      }
+
+      input.value = "";
       showMenu();
-      bottomInput.focus();
+      input.focus();
     }
   });
 
@@ -117,6 +121,7 @@ Welcome, user.
 
 `;
     typeText(bootText, 20);
+
     setTimeout(() => {
       showMenu();
     }, 3000);
@@ -140,7 +145,7 @@ Welcome, user.
   // =========================
   function showMenu() {
     currentSubject = null;
-    removeTopInput();
+
     typeText(`
 PORTFOLIO TERMINAL
 
@@ -150,13 +155,13 @@ ${Object.keys(essays).join("\n")}
 
 help
 `);
-    bottomInput.focus();
+    removeTopInput();
   }
 
   function showSubjectMenu(subject) {
     currentSubject = subject;
-    removeTopInput();
     const list = essays[subject].join("\n- ");
+
     typeText(`
 ${subject.toUpperCase()} ESSAYS
 
@@ -166,49 +171,22 @@ Type one of the following:
 
 Type 'help' to return
 `);
-    bottomInput.focus();
+    removeTopInput();
   }
 
   // =========================
-  // ESSAY INPUT MANAGEMENT
-  // =========================
-  function addTopInput() {
-    if (!topInput) {
-      topInput = document.createElement("input");
-      topInput.type = "text";
-      topInput.placeholder = "Type command + ENTER";
-      topInput.className = "command-input-top";
-      topInput.style.background = "black";
-      topInput.style.color = "#00ff00";
-      topInput.style.border = "none";
-      topInput.style.outline = "none";
-      topInput.style.fontFamily = "monospace";
-      topInput.style.fontSize = "18px";
-      topInput.style.width = "100%";
-      topInput.style.marginBottom = "10px";
-      output.parentNode.insertBefore(topInput, output);
-      topInput.addEventListener("keydown", handleInput);
-    }
-    topInput.focus();
-  }
-
-  function removeTopInput() {
-    if (topInput) {
-      topInput.removeEventListener("keydown", handleInput);
-      topInput.remove();
-      topInput = null;
-    }
-  }
-
-  // =========================
-  // LOAD ESSAY
+  // LOAD ESSAY (WITH TYPING)
   // =========================
   function loadEssay(subject, essayName) {
-    if (typingTimeout) clearTimeout(typingTimeout);
-    isTyping = false;
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+      isTyping = false;
+    }
+
+    // Add top input for essays
+    addTopInput();
 
     output.textContent = "Loading...\n";
-    addTopInput();
 
     fetch(`essays/${subject}/${essayName}.txt`)
       .then(res => {
@@ -216,10 +194,10 @@ Type 'help' to return
         return res.text();
       })
       .then(text => {
-        typeText(`Type back to return.\n\n${text}\n\nType back to return`, 0.125);
+        typeText(`Type 'back' to return.\n\n${text}\n\nType 'back' to return.`, 0.125);
       })
       .catch(() => {
-        typeText(`Error: file not found\n\nType back to return`);
+        typeText(`Error: file not found\n\nType 'back' to return`);
       });
   }
 
@@ -236,37 +214,59 @@ Type 'help' to return
       return;
     }
 
+    if (cmd === "back") {
+      showMenu();
+      return;
+    }
+
+    // Inside subject
     if (currentSubject) {
       if (essays[currentSubject].includes(cmd)) {
         loadEssay(currentSubject, cmd);
-      } else if (cmd === "back") {
-        removeTopInput();
-        showSubjectMenu(currentSubject);
       } else {
-        typeText(`Invalid entry\n\nType help`);
+        typeText(`Invalid entry\n\nType 'back' to return`);
       }
       return;
     }
 
+    // Main menu
     if (essays.hasOwnProperty(cmd)) {
       showSubjectMenu(cmd);
     } else {
-      typeText(`Unknown command\n\nType help`);
+      typeText(`Unknown command\n\nType 'help' to return`);
     }
   }
 
+  input.focus();
+
   // =========================
-  // MOBILE BACK BUTTON HANDLING
+  // TOP INPUT MANAGEMENT FOR ESSAYS
   // =========================
-  if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-    window.addEventListener("popstate", () => {
-      if (currentSubject && !isTyping) {
-        removeTopInput();
-        showMenu();
-        bottomInput.focus();
-      }
-    });
+  function addTopInput() {
+    removeTopInput();
+    const topInputContainer = document.createElement("div");
+    topInputContainer.id = "topInputLine";
+    topInputContainer.className = "inputLineContainer";
+
+    const promptSpan = document.createElement("span");
+    promptSpan.className = "prompt";
+    promptSpan.textContent = ">";
+
+    const topInput = document.createElement("input");
+    topInput.type = "text";
+    topInput.placeholder = "Type command + ENTER";
+    topInput.className = "essayTopInput";
+    topInput.addEventListener("keydown", handleInput);
+
+    topInputContainer.appendChild(promptSpan);
+    topInputContainer.appendChild(topInput);
+
+    document.body.insertBefore(topInputContainer, document.getElementById("terminal"));
   }
 
-  bottomInput.focus();
+  function removeTopInput() {
+    const existing = document.getElementById("topInputLine");
+    if (existing) existing.remove();
+  }
+
 });
