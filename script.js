@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const output = document.getElementById("output");
-  const input = document.getElementById("commandInput");
+  const menuInput = document.getElementById("commandInput");
 
   let essays = {};
   let currentSubject = null;
@@ -35,32 +35,31 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // COMMAND HANDLER
   // =========================
-  function runCommand(cmd) {
+  function runCommand(cmd, isEssayInput = false) {
     if (!cmd) return;
     cmd = cmd.toLowerCase().trim();
 
-    if (cmd === "help") {
+    // Universal back command
+    if (cmd === "back") {
       showMenu();
       return;
     }
 
-    // Inside subject
-    if (currentSubject) {
+    // Essay commands
+    if (currentSubject && isEssayInput) {
       if (essays[currentSubject].includes(cmd)) {
         loadEssay(currentSubject, cmd);
-      } else if (cmd === "back") {
-        showMenu();
       } else {
         appendEssayText("Invalid command. Type 'back' to return.\n");
       }
       return;
     }
 
-    // Main menu
+    // Menu commands
     if (essays.hasOwnProperty(cmd)) {
       showSubjectMenu(cmd);
     } else {
-      typeText(`Unknown command\n\nType help`);
+      typeText(`Unknown command\n\nType 'back'`);
     }
   }
 
@@ -86,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  // Display essay with top & bottom inputs
   function displayEssay(text) {
     output.innerHTML = "";
 
@@ -103,9 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const bottomInputLine = createEssayInput();
     output.appendChild(bottomInputLine);
 
-    // Focus on top input
-    const firstInput = topInputLine.querySelector("input");
-    firstInput.focus();
+    topInputLine.querySelector("input").focus();
   }
 
   function createEssayInput() {
@@ -126,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
     inp.addEventListener("keydown", e => {
       if (e.key === "Enter") {
         e.preventDefault();
-        runCommand(inp.value);
+        runCommand(inp.value, true); // essay input
         inp.value = "";
       }
     });
@@ -152,9 +148,9 @@ Commands:
 
 ${Object.keys(essays).join("\n")}
 
-help
+Type 'back' to return to this menu from an essay
 `);
-    input.focus();
+    menuInput.focus();
   }
 
   function showSubjectMenu(subject) {
@@ -167,7 +163,7 @@ Type one of the following:
 
 - ${list}
 
-Type 'help' to return
+Type 'back' to return
 `);
   }
 
@@ -209,9 +205,20 @@ Welcome, user.
     if (e.key === "Escape") {
       e.preventDefault();
       showMenu();
-      input.focus();
+      menuInput.focus();
     }
   });
 
-  input.focus();
+  // =========================
+  // MENU INPUT HANDLER
+  // =========================
+  menuInput.addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      runCommand(menuInput.value);
+      menuInput.value = "";
+    }
+  });
+
+  menuInput.focus();
 });
