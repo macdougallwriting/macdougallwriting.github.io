@@ -7,14 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentSubject = null;
 
   // =========================
-  // TYPING SYSTEM
+  // TYPING SYSTEM (UPGRADED)
   // =========================
   let typingTimeout = null;
   let isTyping = false;
   let fullText = "";
 
   function typeText(text, speed = 10) {
-    if (typingTimeout) clearTimeout(typingTimeout);
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
     isTyping = true;
     fullText = text;
     output.textContent = "";
@@ -87,6 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         input.value = "";
       }
     }
+
   });
 
   // =========================
@@ -95,10 +99,17 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       e.preventDefault();
+
       if (isTyping) {
         skipTyping();
         return;
       }
+
+      if (typingTimeout) {
+        clearTimeout(typingTimeout);
+        isTyping = false;
+      }
+
       input.value = "";
       showMenu();
       input.focus();
@@ -120,8 +131,12 @@ Access granted.
 Welcome, user.
 
 `;
+
     typeText(bootText, 20);
-    setTimeout(() => showMenu(), 3000);
+
+    setTimeout(() => {
+      showMenu();
+    }, 3000);
   }
 
   // =========================
@@ -168,12 +183,16 @@ Type 'help' to return
   }
 
   // =========================
-  // LOAD ESSAY
+  // LOAD ESSAY (WITH TYPING)
   // =========================
   function loadEssay(subject, essayName) {
-    if (typingTimeout) clearTimeout(typingTimeout);
-    isTyping = false;
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+      isTyping = false;
+    }
+
     output.textContent = "Loading...\n";
+
     fetch(`essays/${subject}/${essayName}.txt`)
       .then(res => {
         if (!res.ok) throw new Error();
@@ -192,9 +211,13 @@ Type 'help' to return
   // =========================
   function runCommand(cmd) {
     if (!cmd) return;
+
     cmd = cmd.toLowerCase().trim();
 
-    if (isTyping) skipTyping();
+    if (isTyping && typingTimeout) {
+      clearTimeout(typingTimeout);
+      isTyping = false;
+    }
 
     if (cmd === "help") {
       showMenu();
@@ -220,32 +243,37 @@ Type 'help' to return
   input.focus();
 
   // =========================
-  // MOBILE BACK BUTTON & TOUCH HANDLER
+  // MOBILE BACK / TAP HANDLER
   // =========================
-  // Fake history state to make Android back button go "home"
-  history.pushState(null, "", location.href);
-
-  window.addEventListener("popstate", () => {
-    if (isTyping) {
-      skipTyping();
-      history.pushState(null, "", location.href);
-      return;
-    }
-    showMenu();
-    input.focus();
-    history.pushState(null, "", location.href);
-  });
-
-  // Touch anywhere outside input → back
   if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
     document.addEventListener("touchstart", e => {
       if (e.target === input) return;
-      if (isTyping) {
-        skipTyping();
-      } else {
-        showMenu();
+      const touch = e.touches[0];
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+      touchStartTime = Date.now();
+    }, { passive: true });
+
+    document.addEventListener("touchend", e => {
+      if (e.target === input) return;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      const dt = Date.now() - touchStartTime;
+
+      // Only trigger back on short tap (minimal movement)
+      if (dt < 300 && Math.sqrt(dx*dx + dy*dy) < 10) {
+        if (isTyping) {
+          skipTyping();
+        } else {
+          showMenu();
+        }
+        input.focus();
       }
-      input.focus();
     }, { passive: true });
   }
 
