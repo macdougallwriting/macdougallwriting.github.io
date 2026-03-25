@@ -24,7 +24,7 @@ body {
   white-space: pre-wrap;
   overflow-wrap: break-word;  /* important for Firefox */
   word-break: break-word;
-  margin-bottom: 10px;
+  margin-bottom: 10px;        /* space between output and bottom input */
 }
 
 /* blinking cursor for output only */
@@ -39,10 +39,9 @@ body {
 }
 
 /* =========================
-   INPUT LINES
+   INPUT LINE (menu input at bottom)
 ========================= */
-#inputLine,
-.inputLineEssay {
+#inputLine {
   display: flex;
   gap: 8px;
   margin-top: 10px;
@@ -56,7 +55,7 @@ body {
 }
 
 /* =========================
-   ALL INPUTS
+   ALL INPUTS (menu & essay)
 ========================= */
 input.commandInput {
   background: black;
@@ -67,11 +66,19 @@ input.commandInput {
   font-size: 18px;
   width: 100%;
   padding: 0;
-  margin: 0;
+  margin: 5px 0;
 }
 
 /* Placeholder styling */
 input.commandInput::placeholder {
   color: #00ff00;
   opacity: 0.5;
+}
+
+/* Essay input lines */
+.inputLineEssay {
+  display: flex;
+  gap: 8px;
+  margin: 5px 0;
+  align-items: center;
 }
