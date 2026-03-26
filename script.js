@@ -10,16 +10,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // TYPING SYSTEM
   // =========================
-  function typeText(text, speed = 10) {
+  function typeText(text, speed = 10, targetElement = output) {
     if (typingTimeout) clearTimeout(typingTimeout);
 
     isTyping = true;
-    output.textContent = "";
+    targetElement.textContent = "";
     let i = 0;
 
     function type() {
       if (i < text.length) {
-        output.textContent += text.charAt(i);
+        targetElement.textContent += text.charAt(i);
         i++;
         typingTimeout = setTimeout(type, speed);
       } else {
@@ -38,23 +38,23 @@ document.addEventListener("DOMContentLoaded", () => {
     cmd = cmd.toLowerCase().trim();
 
     if (currentSubject !== null) {
-  if (cmd === "back") {
-    showMenu();
-    return;
-  }
+      if (cmd === "back") {
+        showMenu();
+        return;
+      }
 
-  if (essays[currentSubject].includes(cmd)) {
-    loadEssay(currentSubject, cmd);
-  } else {
-    typeText(`Unknown command\n\nType 'back'`);
-  }
-  return;
-}
+      if (essays[currentSubject].includes(cmd)) {
+        loadEssay(currentSubject, cmd);
+      } else {
+        typeText(`Unknown command\n\nType 'back'`);
+      }
+      return;
+    }
 
-if (cmd === "back") {
-  showMenu();
-  return;
-}
+    if (cmd === "back") {
+      showMenu();
+      return;
+    }
 
     if (essays.hasOwnProperty(cmd)) {
       showSubjectMenu(cmd);
@@ -86,16 +86,14 @@ if (cmd === "back") {
   }
 
   // =========================
-  // DISPLAY ESSAY (FIXED TYPING)
+  // DISPLAY ESSAY
   // =========================
   function displayEssay(text) {
     output.innerHTML = "";
 
-    // Top input
     const inputLine = createEssayInput();
     output.appendChild(inputLine);
 
-    // Essay container
     const essayText = document.createElement("pre");
     output.appendChild(essayText);
 
@@ -106,16 +104,14 @@ if (cmd === "back") {
       if (i < text.length) {
         essayText.textContent += text.charAt(i);
         i++;
-        typingTimeout = setTimeout(type, 1); // adjust speed if needed
+        typingTimeout = setTimeout(type, 1);
       } else {
         isTyping = false;
       }
     }
 
-    // ✅ Start typing AFTER render
     setTimeout(type, 0);
 
-    // ✅ Focus AFTER typing has begun (prevents animation break)
     setTimeout(() => {
       inputLine.querySelector("input").focus();
     }, 50);
@@ -149,10 +145,18 @@ if (cmd === "back") {
   }
 
   // =========================
-  // MENUS
+  // MENUS (FIXED)
   // =========================
   function showMenu() {
     currentSubject = null;
+
+    output.innerHTML = "";
+
+    const inputLine = createEssayInput();
+    output.appendChild(inputLine);
+
+    const textBlock = document.createElement("pre");
+    output.appendChild(textBlock);
 
     typeText(`
 PORTFOLIO TERMINAL
@@ -162,8 +166,11 @@ Commands:
 ${Object.keys(essays).join("\n")}
 
 Type 'back' anytime to return here
-`);
-    // menuInput.focus();
+`, 10, textBlock);
+
+    setTimeout(() => {
+      inputLine.querySelector("input").focus();
+    }, 50);
   }
 
   function showSubjectMenu(subject) {
@@ -220,12 +227,11 @@ Welcome, user.
     if (e.key === "Escape") {
       e.preventDefault();
       showMenu();
-      menuInput.focus();
     }
   });
 
   // =========================
-  // MENU INPUT
+  // MENU INPUT (kept, but optional now)
   // =========================
   menuInput.addEventListener("keydown", e => {
     if (e.key === "Enter") {
