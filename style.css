@@ -26,12 +26,19 @@ body {
   word-break: break-word;
 }
 
+#output pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
 #output {
   white-space: pre-wrap;
   overflow-wrap: break-word;  /* important for Firefox */
   word-break: break-word;
   margin-bottom: 10px;        /* space between output and bottom input */
 }
+
 
 /* blinking cursor for output only */
 #output::after {
