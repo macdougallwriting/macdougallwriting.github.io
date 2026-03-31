@@ -31,6 +31,27 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
+  // CLICKABLE COMMAND BUTTONS
+  // =========================
+  function renderCommandButtons(commands) {
+    const container = document.createElement("div");
+    container.classList.add("command-buttons");
+
+    commands.forEach(cmd => {
+      const btn = document.createElement("button");
+      btn.textContent = cmd;
+
+      btn.addEventListener("click", () => {
+        runCommand(cmd);
+      });
+
+      container.appendChild(btn);
+    });
+
+    output.appendChild(container);
+  }
+
+  // =========================
   // COMMAND HANDLER
   // =========================
   function runCommand(cmd) {
@@ -81,7 +102,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // DISPLAY ESSAY (no top input)
+  // DISPLAY ESSAY
   // =========================
   function displayEssay(text) {
     output.textContent = "";
@@ -118,6 +139,11 @@ ${Object.keys(essays).join("\n")}
 Type 'back' anytime to return here
 `);
 
+    // Render clickable subject buttons
+    setTimeout(() => {
+      renderCommandButtons(Object.keys(essays));
+    }, 50);
+
     menuInput.focus();
   }
 
@@ -135,6 +161,11 @@ Type one of the following:
 
 Type 'back' to return
 `);
+
+    // Render clickable essay buttons + back
+    setTimeout(() => {
+      renderCommandButtons([...essays[subject], "back"]);
+    }, 50);
 
     menuInput.focus();
   }
@@ -183,7 +214,7 @@ Welcome, user.
   });
 
   // =========================
-  // MENU INPUT (ONLY INPUT NOW)
+  // MENU INPUT
   // =========================
   menuInput.addEventListener("keydown", e => {
     if (e.key === "Enter") {
