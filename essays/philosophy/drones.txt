@@ -1,4 +1,4 @@
-CUSTOMER SERVICE, I’D LIKE TO RETURN MY DRONE [EDIT CITATIONS AND ADD BIB]
+CUSTOMER SERVICE, I’D LIKE TO RETURN MY DRONE
 
 
 Alexander Macdougall
@@ -6,7 +6,7 @@ Alexander Macdougall
 
 _______________________________________
 
-ABSTRACT (ONE SPACE ABOVE, TWO BELOW)
+Determining blame can be difficult when blame is spread amongst a great number of people. War crimes have been traditionally linked to the regimes and officers who oversaw them; however, autonomous, AI-powered weapon systems have created some confusion as to who to blame if one of these systems 'malfunctions' and commits an atrocity. 'Customer Service, I'd Like to Return my Drone' argues that blame cannot be accurately placed in such situations due to indirect nature of their systems. Specific scenarios and systems may reveal culpability on a case-by-case basis, but the ease of doing so broadly speaking has been hampered by these devices' autonomy.
 
 _______________________________________
 
