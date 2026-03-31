@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   const output = document.getElementById("output");
-  const buttonsContainer = document.getElementById("buttons");
   const menuInput = document.getElementById("commandInput");
 
   let essays = {};
@@ -16,8 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     isTyping = true;
     output.textContent = "";
-    buttonsContainer.innerHTML = ""; // clear buttons separately
-
     let i = 0;
 
     function type() {
@@ -31,24 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     type();
-  }
-
-  // =========================
-  // CLICKABLE COMMAND BUTTONS
-  // =========================
-  function renderCommandButtons(commands) {
-    buttonsContainer.innerHTML = "";
-
-    commands.forEach(cmd => {
-      const btn = document.createElement("button");
-      btn.textContent = cmd;
-
-      btn.addEventListener("click", () => {
-        runCommand(cmd);
-      });
-
-      buttonsContainer.appendChild(btn);
-    });
   }
 
   // =========================
@@ -86,7 +65,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typingTimeout) clearTimeout(typingTimeout);
     isTyping = false;
     output.textContent = "";
-    buttonsContainer.innerHTML = "";
 
     fetch(`essays/${subject}/${essayName}.txt`)
       .then(res => {
@@ -103,11 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // DISPLAY ESSAY
+  // DISPLAY ESSAY (no top input)
   // =========================
   function displayEssay(text) {
     output.textContent = "";
-    buttonsContainer.innerHTML = "";
 
     let i = 0;
     isTyping = true;
@@ -141,10 +118,6 @@ ${Object.keys(essays).join("\n")}
 Type 'back' anytime to return here
 `);
 
-    setTimeout(() => {
-      renderCommandButtons(Object.keys(essays));
-    }, 50);
-
     menuInput.focus();
   }
 
@@ -162,10 +135,6 @@ Type one of the following:
 
 Type 'back' to return
 `);
-
-    setTimeout(() => {
-      renderCommandButtons([...essays[subject], "back"]);
-    }, 50);
 
     menuInput.focus();
   }
@@ -214,7 +183,7 @@ Welcome, user.
   });
 
   // =========================
-  // MENU INPUT
+  // MENU INPUT (ONLY INPUT NOW)
   // =========================
   menuInput.addEventListener("keydown", e => {
     if (e.key === "Enter") {
