@@ -127,7 +127,7 @@ Type 'back' anytime to return here
     const list = essays[subject].join("\n- ");
 
     typeText(`
-${subject.toUpperCase()} ESSAYS
+${subject.toUpperCase()}
 
 Type one of the following:
 
