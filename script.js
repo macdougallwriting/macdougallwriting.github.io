@@ -101,14 +101,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     type();
   }
+function renderCommandButtons(commands) {
+  const container = document.createElement("div");
+  container.classList.add("command-buttons");
 
+  commands.forEach(cmd => {
+    const btn = document.createElement("button");
+    btn.textContent = cmd;
+
+    btn.addEventListener("click", () => {
+      runCommand(cmd);
+    });
+
+    container.appendChild(btn);
+  });
+
+  output.appendChild(container);
+}
   // =========================
   // MENUS
   // =========================
-  function showMenu() {
-    currentSubject = null;
+function showMenu() {
+  currentSubject = null;
 
-    typeText(`
+  typeText(`
 PORTFOLIO TERMINAL
 
 Commands:
@@ -118,9 +134,13 @@ ${Object.keys(essays).join("\n")}
 Type 'back' anytime to return here
 `);
 
-    menuInput.focus();
-  }
+  // Add clickable buttons
+  setTimeout(() => {
+    renderCommandButtons(Object.keys(essays));
+  }, 50);
 
+  menuInput.focus();
+}
   function showSubjectMenu(subject) {
     currentSubject = subject;
 
