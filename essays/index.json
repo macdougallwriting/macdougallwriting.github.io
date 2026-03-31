@@ -1,7 +1,8 @@
 {
   "about": ["bio", "website"],
-  "history": ["genocide", "acid", "authority", "safety"],
-  "philosophy": ["drones", "cheating", "rhizomes"],
+  "english": ["allegories", "death", "light", "secrecy"]
+  "history": ["acid", "authority", "genocide", "safety"],
+  "philosophy": ["cheating", "drones", "rhizomes"],
   "politics": ["fascism"],
-  "english": ["death", "light", "allegories", "secrecy"]
 }
+
