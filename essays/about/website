@@ -1,6 +1,8 @@
 Version 0.9
 March 31, 2026
 
-Type the subject that you would like to explore into the 'Type Command + ENTER' space, then type the specific content that you wish to view. For example, you could type 'history,' then 'authority' to read a history essay on authority. 
+Type the subject that you would like to explore from the available commands into the 'Type Command + ENTER' space, then type the specific content that you wish to view. For example, you could type 'history,' then 'authority' to read a history essay on authority. 
 
 Type 'back' at any point to return to the main menu. Keyboard users can press the ESC key to do the same. 
+
+Functional on Android and iOS, though specific touch commands (like swiping to go back on an iPhone) are not implemented. If you are having issues typing a command, try pressing/clicking on the 'Type Command + ENTER' space.
