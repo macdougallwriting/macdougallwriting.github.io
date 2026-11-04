@@ -2,10 +2,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const output = document.getElementById("output");
   const menuInput = document.getElementById("commandInput");
 
+  const AI_ENDPOINT =
+    "https://ai-terminal-backend.zander0506.workers.dev";
+
   let essays = {};
   let currentSubject = null;
+  let currentMode = null;
+
   let typingTimeout = null;
   let isTyping = false;
+
+  let conversationHistory = [];
+  let chatTranscript = [];
 
   // =========================
   // TYPING SYSTEM
@@ -34,11 +42,29 @@ document.addEventListener("DOMContentLoaded", () => {
   // COMMAND HANDLER
   // =========================
   function runCommand(cmd) {
-    if (!cmd) return;
-    cmd = cmd.toLowerCase().trim();
+    if (!cmd.trim()) return;
+
+    const rawCmd = cmd.trim();
+
+    // AI CHAT MODE
+    if (currentMode === "ai") {
+      if (rawCmd.toLowerCase() === "back") {
+        showMenu();
+      } else {
+        sendAIMessage(rawCmd);
+      }
+      return;
+    }
+
+    cmd = rawCmd.toLowerCase();
 
     if (cmd === "back") {
       showMenu();
+      return;
+    }
+
+    if (cmd === "ai test" || cmd === "ai") {
+      showAIChat();
       return;
     }
 
@@ -46,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (essays[currentSubject].includes(cmd)) {
         loadEssay(currentSubject, cmd);
       } else {
-        typeText(`Unknown command\n\nType 'back'`);
+        typeText("Unknown command\n\nType 'back'");
       }
       return;
     }
@@ -54,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (essays.hasOwnProperty(cmd)) {
       showSubjectMenu(cmd);
     } else {
-      typeText(`Unknown command\n\nType 'back'`);
+      typeText("Unknown command\n\nType 'back'");
     }
   }
 
@@ -76,12 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
         displayEssay(text);
       })
       .catch(() => {
-        typeText(`Error: file not found\n\nType 'back'`);
+        typeText("Error: file not found\n\nType 'back'");
       });
   }
 
   // =========================
-  // DISPLAY ESSAY (no top input)
+  // DISPLAY ESSAY
   // =========================
   function displayEssay(text) {
     output.textContent = "";
@@ -103,10 +129,126 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
+  // AI CHAT INTERFACE
+  // =========================
+  function showAIChat() {
+    currentSubject = null;
+    currentMode = "ai";
+
+    conversationHistory = [];
+    chatTranscript = [];
+
+    menuInput.placeholder = "Type message + ENTER";
+
+    output.textContent =
+`AI TEST TERMINAL
+
+Connection established.
+Model: GLM 4.7 Flash
+
+You are now connected to the AI.
+
+Type a message and press ENTER.
+Type 'back' to return to the main menu.
+
+----------------------------------------
+
+`;
+
+    menuInput.focus();
+  }
+
+  // =========================
+  // DISPLAY CHAT HISTORY
+  // =========================
+  function renderChat(status = "") {
+    let text = `AI TEST TERMINAL
+
+Model: GLM 4.7 Flash
+
+----------------------------------------
+
+`;
+
+    text += chatTranscript.join("\n\n");
+
+    if (status) {
+      text += "\n\n" + status;
+    }
+
+    output.textContent = text;
+  }
+
+  // =========================
+  // SEND MESSAGE TO AI
+  // =========================
+  async function sendAIMessage(message) {
+    if (!message.trim()) return;
+
+    conversationHistory.push({
+      role: "user",
+      content: message
+    });
+
+    chatTranscript.push("YOU: " + message);
+
+    renderChat("AI is thinking...");
+
+    menuInput.disabled = true;
+
+    try {
+      const response = await fetch(AI_ENDPOINT, {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          messages: conversationHistory
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.reply) {
+        throw new Error(data.details || data.error || "Invalid AI response.");
+      }
+
+      conversationHistory.push({
+        role: "assistant",
+        content: data.reply
+      });
+
+      chatTranscript.push("AI: " + data.reply);
+
+      renderChat();
+
+    } catch (error) {
+      chatTranscript.push(
+        "SYSTEM ERROR: " + error.message
+      );
+
+      // Remove the unanswered message from conversation history.
+      conversationHistory.pop();
+
+      renderChat();
+
+    } finally {
+      menuInput.disabled = false;
+      menuInput.focus();
+    }
+  }
+
+  // =========================
   // MENUS
   // =========================
   function showMenu() {
     currentSubject = null;
+    currentMode = null;
+
+    menuInput.disabled = false;
+    menuInput.placeholder = "Type command + ENTER";
 
     typeText(`
 PORTFOLIO TERMINAL
@@ -114,6 +256,8 @@ PORTFOLIO TERMINAL
 Commands:
 
 ${Object.keys(essays).join("\n")}
+
+ai test
 
 Type 'back' anytime to return here
 `);
@@ -123,6 +267,7 @@ Type 'back' anytime to return here
 
   function showSubjectMenu(subject) {
     currentSubject = subject;
+    currentMode = null;
 
     const list = essays[subject].join("\n- ");
 
@@ -155,6 +300,7 @@ Welcome, user.
 `;
 
     typeText(bootText, 20);
+
     setTimeout(() => showMenu(), 3000);
   }
 
@@ -183,12 +329,14 @@ Welcome, user.
   });
 
   // =========================
-  // MENU INPUT (ONLY INPUT NOW)
+  // MENU / AI INPUT
   // =========================
   menuInput.addEventListener("keydown", e => {
     if (e.key === "Enter") {
       e.preventDefault();
+
       runCommand(menuInput.value);
+
       menuInput.value = "";
     }
   });
