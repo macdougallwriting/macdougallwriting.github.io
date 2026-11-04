@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   const output = document.getElementById("output");
   const menuInput = document.getElementById("commandInput");
@@ -7,22 +8,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let essays = {};
   let currentSubject = null;
-  let currentMode = null;
+  let currentMode = "menu";
 
   let typingTimeout = null;
   let isTyping = false;
-
   let conversationHistory = [];
-  let chatTranscript = [];
+  let waitingForAI = false;
 
   // =========================
   // TYPING SYSTEM
   // =========================
+
   function typeText(text, speed = 10) {
     if (typingTimeout) clearTimeout(typingTimeout);
 
     isTyping = true;
     output.textContent = "";
+
     let i = 0;
 
     function type() {
@@ -41,44 +43,47 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // COMMAND HANDLER
   // =========================
+
   function runCommand(cmd) {
-    if (!cmd.trim()) return;
+    if (!cmd) return;
 
-    const rawCmd = cmd.trim();
+    cmd = cmd.trim();
 
-    // AI CHAT MODE
-    if (currentMode === "ai") {
-      if (rawCmd.toLowerCase() === "back") {
-        showMenu();
-      } else {
-        sendAIMessage(rawCmd);
-      }
-      return;
-    }
-
-    cmd = rawCmd.toLowerCase();
-
-    if (cmd === "back") {
+    if (cmd.toLowerCase() === "back") {
       showMenu();
       return;
     }
 
-    if (cmd === "ai test" || cmd === "ai") {
-      showAIChat();
+    if (currentMode === "ai") {
+      sendAIMessage(cmd);
       return;
     }
 
     if (currentSubject !== null) {
-      if (essays[currentSubject].includes(cmd)) {
-        loadEssay(currentSubject, cmd);
+      const essayName = essays[currentSubject].find(
+        name => name.toLowerCase() === cmd.toLowerCase()
+      );
+
+      if (essayName) {
+        loadEssay(currentSubject, essayName);
       } else {
         typeText("Unknown command\n\nType 'back'");
       }
+
       return;
     }
 
-    if (essays.hasOwnProperty(cmd)) {
-      showSubjectMenu(cmd);
+    if (cmd.toLowerCase() === "ai test") {
+      enterAIChat();
+      return;
+    }
+
+    const subject = Object.keys(essays).find(
+      name => name.toLowerCase() === cmd.toLowerCase()
+    );
+
+    if (subject) {
+      showSubjectMenu(subject);
     } else {
       typeText("Unknown command\n\nType 'back'");
     }
@@ -87,8 +92,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // LOAD ESSAY
   // =========================
+
   function loadEssay(subject, essayName) {
     if (typingTimeout) clearTimeout(typingTimeout);
+
     isTyping = false;
     output.textContent = "";
 
@@ -99,6 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
       })
       .then(text => {
         currentSubject = subject;
+        currentMode = "essay";
         displayEssay(text);
       })
       .catch(() => {
@@ -109,6 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // DISPLAY ESSAY
   // =========================
+
   function displayEssay(text) {
     output.textContent = "";
 
@@ -129,19 +138,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =========================
-  // AI CHAT INTERFACE
+  // AI CHAT
   // =========================
-  function showAIChat() {
-    currentSubject = null;
+
+  function enterAIChat() {
+    if (typingTimeout) clearTimeout(typingTimeout);
+
     currentMode = "ai";
-
+    currentSubject = null;
     conversationHistory = [];
-    chatTranscript = [];
+    waitingForAI = false;
 
-    menuInput.placeholder = "Type message + ENTER";
-
-    output.textContent =
-`AI TEST TERMINAL
+    typeText(`
+AI TEST TERMINAL
 
 Connection established.
 Model: GLM 4.7 Flash
@@ -149,70 +158,48 @@ Model: GLM 4.7 Flash
 You are now connected to the AI.
 
 Type a message and press ENTER.
-Type 'back' to return to the main menu.
+Type 'back' to disconnect.
+`);
 
-----------------------------------------
-
-`;
-
+    menuInput.placeholder = "Type message + ENTER";
     menuInput.focus();
   }
 
-  // =========================
-  // DISPLAY CHAT HISTORY
-  // =========================
-  function renderChat(status = "") {
-    let text = `AI TEST TERMINAL
-
-Model: GLM 4.7 Flash
-
-----------------------------------------
-
-`;
-
-    text += chatTranscript.join("\n\n");
-
-    if (status) {
-      text += "\n\n" + status;
-    }
-
-    output.textContent = text;
-  }
-
-  // =========================
-  // SEND MESSAGE TO AI
-  // =========================
   async function sendAIMessage(message) {
-    if (!message.trim()) return;
+    if (waitingForAI) return;
+
+    waitingForAI = true;
+
+    menuInput.disabled = true;
+
+    output.textContent +=
+      `\n\n> ${message}\n\nAI is thinking...`;
 
     conversationHistory.push({
       role: "user",
       content: message
     });
 
-    chatTranscript.push("YOU: " + message);
-
-    renderChat("AI is thinking...");
-
-    menuInput.disabled = true;
-
     try {
       const response = await fetch(AI_ENDPOINT, {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json"
         },
-
         body: JSON.stringify({
-          messages: conversationHistory
+          message: message,
+          history: conversationHistory
         })
       });
 
       const data = await response.json();
 
-      if (!response.ok || !data.reply) {
-        throw new Error(data.details || data.error || "Invalid AI response.");
+      if (!response.ok) {
+        throw new Error(data.error || "AI request failed.");
+      }
+
+      if (!data.reply) {
+        throw new Error("The AI returned an empty response.");
       }
 
       conversationHistory.push({
@@ -220,32 +207,41 @@ Model: GLM 4.7 Flash
         content: data.reply
       });
 
-      chatTranscript.push("AI: " + data.reply);
-
-      renderChat();
-
-    } catch (error) {
-      chatTranscript.push(
-        "SYSTEM ERROR: " + error.message
+      output.textContent = output.textContent.replace(
+        "AI is thinking...",
+        `AI:\n${data.reply}`
       );
 
-      // Remove the unanswered message from conversation history.
+      output.textContent += "\n\n";
+
+    } catch (error) {
+      output.textContent = output.textContent.replace(
+        "AI is thinking...",
+        `ERROR: ${error.message}`
+      );
+
+      output.textContent += "\n\n";
+
+      // Remove the failed message from conversation history.
       conversationHistory.pop();
-
-      renderChat();
-
-    } finally {
-      menuInput.disabled = false;
-      menuInput.focus();
     }
+
+    waitingForAI = false;
+    menuInput.disabled = false;
+    menuInput.focus();
   }
 
   // =========================
   // MENUS
   // =========================
+
   function showMenu() {
+    if (typingTimeout) clearTimeout(typingTimeout);
+
     currentSubject = null;
-    currentMode = null;
+    currentMode = "menu";
+    waitingForAI = false;
+    conversationHistory = [];
 
     menuInput.disabled = false;
     menuInput.placeholder = "Type command + ENTER";
@@ -267,7 +263,7 @@ Type 'back' anytime to return here
 
   function showSubjectMenu(subject) {
     currentSubject = subject;
-    currentMode = null;
+    currentMode = "subject";
 
     const list = essays[subject].join("\n- ");
 
@@ -287,6 +283,7 @@ Type 'back' to return
   // =========================
   // BOOT SEQUENCE
   // =========================
+
   function bootSequence() {
     const bootText = `
 Initializing system...
@@ -307,6 +304,7 @@ Welcome, user.
   // =========================
   // LOAD JSON INDEX
   // =========================
+
   fetch("essays/index.json")
     .then(res => res.json())
     .then(data => {
@@ -320,24 +318,28 @@ Welcome, user.
   // =========================
   // ESC KEY
   // =========================
+
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       e.preventDefault();
       showMenu();
-      menuInput.focus();
     }
   });
 
   // =========================
-  // MENU / AI INPUT
+  // MENU / CHAT INPUT
   // =========================
+
   menuInput.addEventListener("keydown", e => {
     if (e.key === "Enter") {
       e.preventDefault();
 
-      runCommand(menuInput.value);
+      if (waitingForAI) return;
 
+      const command = menuInput.value;
       menuInput.value = "";
+
+      runCommand(command);
     }
   });
 
