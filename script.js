@@ -187,9 +187,8 @@ Type 'back' to disconnect.
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          message: message,
-          history: conversationHistory
-        })
+  messages: conversationHistory
+})
       });
 
       const data = await response.json();
